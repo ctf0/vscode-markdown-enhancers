@@ -12,11 +12,11 @@ export default class LensProvider implements CodeLensProvider {
         let links = []
 
         const text = document.getText()
-        const re = new RegExp(/(?<=( +)?`{3}\S+\s)(.|\s)*?(?=\s( +)?`{3})/, 'g')
+        const re = new RegExp(/(?<=([ \t]+)?`{3}\S+\s)(.|\s)*?(?=\s([ \t]+)?`{3})/, 'g')
         let match
 
         while ((match = re.exec(text)) !== null) {
-            let cmnd = match[0].replace(/^( +)?\$( +)?/gm, '')
+            let cmnd = match[0].replace(/^([ \t]+)?\$([ \t]+)?/gm, '')
             let pos = document.positionAt(match.index)
             let range = new Range(pos, pos.with(pos.line, pos.character + cmnd.length))
             let args = [{text: cmnd}]

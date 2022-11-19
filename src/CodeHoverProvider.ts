@@ -31,7 +31,7 @@ export default class HoverProvider {
         }
 
         /* Nested ------------------------------------------------------------------- */
-        range = document.getWordRangeAtPosition(position, new RegExp(/^( +)?\$.*?$/, 'g'))
+        range = document.getWordRangeAtPosition(position, new RegExp(/^([ \t]+)?\$.*?$/, 'g'))
 
         if (range) {
             let text = this.cleanBlock(document.getText(range))
@@ -52,7 +52,7 @@ export default class HoverProvider {
 
     cleanBlock(text) {
         return text
-                .replace(/^( +)?\$( +)?/g, '')
-                .replace(/( +)?\/[\/|\*].*?$/g, '')
+                .replace(/^([ \t]+)?\$([ \t]+)?/g, '')
+                .replace(/([ \t]+)?\/[\/|\*].*?$/g, '')
     }
 }

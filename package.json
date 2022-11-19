@@ -1,8 +1,8 @@
 {
     "name": "markdown-enhancers",
-    "displayName": "Markdown enhancers",
+    "displayName": "Markdown Enhancers",
     "description": "some enhancers to make working with Markdown a bit easier",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "publisher": "ctf0",
     "repository": "https://github.com/ctf0/vscode-markdown-enhancers",
     "engines": {
