@@ -5,7 +5,7 @@ import {
     Hover,
     Uri
 } from 'vscode'
-import * as util from './util'
+import * as util from '../util'
 
 export default class HoverProvider {
     provideHover(document: TextDocument, position: Position) {

@@ -38,3 +38,9 @@ export function prepareArgs(args: object){
 export function pkgTitle(){
     return titleCase(CMND_PREFIX);
 }
+
+export const PACKAGE_NAME: string = 'markdownEnhancers'
+export let config: any
+export function setConfig() {
+    config = vscode.workspace.getConfiguration(PACKAGE_NAME);
+}

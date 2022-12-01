@@ -4,7 +4,7 @@ import {
     TextDocument,
     Range,
 } from 'vscode'
-import * as util from './util'
+import * as util from '../util'
 
 export default class LensProvider implements CodeLensProvider {
     async provideCodeLenses(document: TextDocument): Promise<CodeLens[]> {

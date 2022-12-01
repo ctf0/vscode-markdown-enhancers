@@ -2,7 +2,7 @@
     "name": "markdown-enhancers",
     "displayName": "Markdown Enhancers",
     "description": "some enhancers to make working with Markdown a bit easier",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "ctf0",
     "repository": "https://github.com/ctf0/vscode-markdown-enhancers",
     "engines": {
@@ -22,7 +22,26 @@
             {
                 "id": "markdown"
             }
-        ]
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Markdown Enhancers",
+            "properties": {
+                "markdownEnhancers.decorationSupport": {
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "enable/disable decoration support"
+                },
+                "markdownEnhancers.linkStyles": {
+                    "type": "object",
+                    "default": {
+                        "backgroundColor": "#fda20020",
+                        "css": "padding: 3px 0"
+                    },
+                    "markdownDescription": "link decoration styling [ReadMore](https://code.visualstudio.com/api/references/vscode-api#DecorationRenderOptions)"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run esbuild-base -- --minify",
@@ -39,6 +58,7 @@
         "typescript": "^4.6.3"
     },
     "dependencies": {
+        "escape-string-regexp": "^5.0.0",
         "title-case": "^3.0.3"
     }
 }
