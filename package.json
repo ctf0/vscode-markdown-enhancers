@@ -2,7 +2,7 @@
     "name": "markdown-enhancers",
     "displayName": "Markdown Enhancers",
     "description": "some enhancers to make working with Markdown a bit easier",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "publisher": "ctf0",
     "repository": "https://github.com/ctf0/vscode-markdown-enhancers",
     "engines": {
@@ -14,8 +14,7 @@
     ],
     "main": "./out/main",
     "activationEvents": [
-        "onLanguage:markdown",
-        "onStartupFinished"
+        "onLanguage:markdown"
     ],
     "contributes": {
         "languages": [
@@ -60,5 +59,8 @@
     "dependencies": {
         "escape-string-regexp": "^5.0.0",
         "title-case": "^3.0.3"
-    }
+    },
+    "extensionDependencies": [
+        "ctf0.symbol-masks-new"
+    ]
 }

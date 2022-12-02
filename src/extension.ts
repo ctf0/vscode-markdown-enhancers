@@ -1,11 +1,12 @@
-import HoverProvider from './providers/CodeHoverProvider';
-import LensProvider from './providers/CodeLensProvider';
-import {MaskControllers, TextDecoration} from './mask/TextDecoration';
 import * as vscode from 'vscode'
 import * as util from './util'
-import MaskController from './mask/mask-controller';
+import HoverProvider from './providers/CodeHoverProvider';
+import LensProvider from './providers/CodeLensProvider';
+import TextDecoration from './providers/TextDecoration';
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+    await util.maskExtensionProviderInit()
+
     util.setConfig()
 
     vscode.workspace.onDidChangeConfiguration((event) => {
@@ -35,11 +36,11 @@ export function activate(context: vscode.ExtensionContext) {
     useDecoration(context)
 }
 
-function useDecoration(context) {
+function useDecoration(context: vscode.ExtensionContext) {
     if (util.config.decorationSupport) {
         TextDecoration(context)
     } else {
-        MaskControllers.map((item: MaskController) => item.clear())
+        util.MASK_EXTENSION_PROVIDER.clearMaskDecorations()
     }
 }
 

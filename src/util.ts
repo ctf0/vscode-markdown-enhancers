@@ -1,6 +1,9 @@
 import * as vscode from 'vscode'
 import { titleCase } from "title-case";
 
+export let config: any
+export let MASK_EXTENSION_PROVIDER
+export const PACKAGE_NAME: string = 'markdownEnhancers'
 export const FILE_TYPE = 'markdown'
 export const CMND_PREFIX = 'markdown'
 export const btns = {
@@ -36,11 +39,19 @@ export function prepareArgs(args: object){
 }
 
 export function pkgTitle(){
-    return titleCase(CMND_PREFIX);
+    return titleCase(PACKAGE_NAME);
 }
 
-export const PACKAGE_NAME: string = 'markdownEnhancers'
-export let config: any
+export async function maskExtensionProviderInit() {
+    const maskExtension = vscode.extensions.getExtension("ctf0.symbol-masks-new");
+
+    if (maskExtension == null) {
+        throw new Error("Depends on 'ctf0.symbol-masks-new' extension");
+    }
+
+    MASK_EXTENSION_PROVIDER = await maskExtension.activate();
+}
+
 export function setConfig() {
     config = vscode.workspace.getConfiguration(PACKAGE_NAME);
 }

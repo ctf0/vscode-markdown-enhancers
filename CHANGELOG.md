@@ -15,3 +15,9 @@
 ## 0.0.4
 
 - fix error after editor is closed
+
+## 0.0.5
+
+- use `ctf0.symbol-masks-new` as dependency
+- cleanups
+- add partial support for *gotoSymbol links*, but still need more work.
