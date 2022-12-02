@@ -106,27 +106,30 @@ function events(context: vscode.ExtensionContext) {
 }
 
 function linkDecor(editor) {
-    const { document } = editor
-    const text = document.getText();
-    const regEx = /(?<!\!)\[(?!\!)(.*?)\]\((.*?)\)/g;
-
-    let match;
     let patterns: any = [];
 
-    while ((match = regEx.exec(text))) {
-        let title = match[1]
-        let link = match[2]
-        let myContent = new vscode.MarkdownString(`[${title}](${link})`)
-        myContent.isTrusted = true
+    if (editor) {
+        const { document } = editor
+        const text = document.getText();
+        const regEx = /(?<!\!)\[(?!\!)(.*?)\]\((.*?)\)/g;
 
-        patterns.push(
-            {
-                "pattern": escapeStringRegexp(`[${title}](${link})`),
-                "replace": title,
-                "hover": myContent,
-                "style": util.config.linkStyles
-            },
-        )
+        let match;
+
+        while ((match = regEx.exec(text))) {
+            let title = match[1]
+            let link = match[2]
+            let myContent = new vscode.MarkdownString(`[${title}](${link})`)
+            myContent.isTrusted = true
+
+            patterns.push(
+                {
+                    "pattern": escapeStringRegexp(`[${title}](${link})`),
+                    "replace": title,
+                    "hover": myContent,
+                    "style": util.config.linkStyles
+                },
+            )
+        }
     }
 
     return patterns
