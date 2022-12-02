@@ -21,3 +21,8 @@
 - use `ctf0.symbol-masks-new` as dependency
 - cleanups
 - add partial support for *gotoSymbol links*, but still need more work.
+
+## 0.0.6
+
+- remove support for *gotoSymbol* hover support
+- decorate other links types (minus hover support) instead of ignoring it

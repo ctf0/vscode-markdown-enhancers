@@ -56,28 +56,79 @@ function linkDecor(editor) {
     if (editor) {
         const { document } = editor
         const text = document.getText();
-        const regEx = /(?<!\!)\[(?!\!)(.*?)\]\((.*?)\)/g;
 
-        let match;
+        patterns.push(
+            ...externalLinkRegex(text),
+            ...complexLinkRegex(text),
+            ...headerLinkRegex(text)
+        )
+    }
 
-        while ((match = regEx.exec(text))) {
-            let title = match[1]
-            let link = match[2]
+    return patterns
+}
 
-            let arg = encodeURIComponent(JSON.stringify([link]))
-            let hover = link.startsWith('#')
-                        ? getHoverText(title, vscode.Uri.parse(`command:workbench.action.gotoSymbol?${arg}`))
-                        : getHoverText(title, link)
+// []()
+function externalLinkRegex(text) {
+    const regEx = /(?<!\[\!)\[(?!\!)(.*?)\]\((?!#)(.*?)\)/g;
+    let patterns = []
+    let match;
 
-            patterns.push(
-                {
-                    "pattern": escapeStringRegexp(`[${title}](${link})`),
-                    "replace": title,
-                    "hover": hover,
-                    "style": util.config.linkStyles
-                },
-            )
-        }
+    while ((match = regEx.exec(text))) {
+        let title = match[1]
+        let link = match[2]
+
+        patterns.push(
+            {
+                "pattern": escapeStringRegexp(`[${title}](${link})`),
+                "replace": ` @${title} `,
+                "hover": getHoverText(title, link),
+                "style": util.config.linkStyles
+            },
+        )
+    }
+
+    return patterns
+}
+
+// [![]()]()
+function complexLinkRegex(text) {
+    let regEx = /\[!\[(.*?)\]\((.*?)\)(?=(\s|$))/g;
+    let patterns = []
+    let match;
+
+    while ((match = regEx.exec(text))) {
+        let title = match[1]
+        let link = match[2]
+
+        patterns.push(
+            {
+                "pattern": escapeStringRegexp(`[![${title}](${link})`),
+                "replace": ` !${title} `,
+                "style": util.config.linkStyles
+            },
+        )
+    }
+
+    return patterns
+}
+
+// [](#)
+function headerLinkRegex(text) {
+    const regEx = /(?<!\[\!)\[(?!\!)(.*?)\]\((#.*?)\)/g;
+    let patterns = []
+    let match;
+
+    while ((match = regEx.exec(text))) {
+        let title = match[1]
+        let link = match[2]
+
+        patterns.push(
+            {
+                "pattern": escapeStringRegexp(`[${title}](${link})`),
+                "replace": ` #${title} `,
+                "style": util.config.linkStyles
+            },
+        )
     }
 
     return patterns
