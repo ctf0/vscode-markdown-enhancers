@@ -26,3 +26,7 @@
 
 - remove support for *gotoSymbol* hover support
 - decorate other links types (minus hover support) instead of ignoring it
+
+## 0.0.7
+
+- correct link regex

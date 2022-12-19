@@ -2,7 +2,7 @@
     "name": "markdown-enhancers",
     "displayName": "Markdown Enhancers",
     "description": "some enhancers to make working with Markdown a bit easier",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "publisher": "ctf0",
     "repository": "https://github.com/ctf0/vscode-markdown-enhancers",
     "engines": {
@@ -43,18 +43,17 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "npm run esbuild-base -- --minify",
+        "vscode:prepublish": "npm run esbuild-base -- --pure:console.log --minify",
         "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
         "esbuild": "npm run esbuild-base -- --sourcemap",
         "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-        "watch": "npm run vscode:prepublish"
+        "watch": "npm run esbuild"
     },
     "devDependencies": {
-        "@types/node": "^17.0.23",
+        "@types/node": "^18.13.0",
         "@types/vscode": "^1.68.0",
-        "esbuild": "^0.15.13",
-        "tslint": "^5.20.1",
-        "typescript": "^4.6.3"
+        "esbuild": "^0.17.6",
+        "typescript": "^4.9.5"
     },
     "dependencies": {
         "escape-string-regexp": "^5.0.0",

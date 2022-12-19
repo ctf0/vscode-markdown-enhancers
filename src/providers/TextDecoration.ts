@@ -1,6 +1,6 @@
-import * as util from "../util";
-import * as vscode from "vscode";
 import escapeStringRegexp from 'escape-string-regexp';
+import * as vscode from "vscode";
+import * as util from "../util";
 
 let userMasks: any = []
 
@@ -69,8 +69,8 @@ function linkDecor(editor) {
 
 // []()
 function externalLinkRegex(text) {
-    const regEx = /(?<!\[\!)\[(?!\!)(.*?)\]\((?!#)(.*?)\)/g;
-    let patterns = []
+    const regEx = /(?<!\[\!)\[(?![\! ])(.*?)\]\((?!#)(.*?)\)/g;
+    let patterns: any = []
     let match;
 
     while ((match = regEx.exec(text))) {
