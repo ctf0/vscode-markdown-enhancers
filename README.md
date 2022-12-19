@@ -10,3 +10,4 @@
 - code blocks with any of the below will be cleaned b4 being *executed* or *copied*
     - starts with dollar sign `$`
     - end with a comment `// ...` or `/* ...`
+- decorated links hover doesnt work https://github.com/microsoft/vscode/issues/105302
