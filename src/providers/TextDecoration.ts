@@ -1,142 +1,133 @@
 import escapeStringRegexp from 'escape-string-regexp';
-import * as vscode from "vscode";
-import * as util from "../util";
+import * as vscode from 'vscode';
+import * as util from '../util';
 
-let userMasks: any = []
+let userMasks: any = [];
 
 export default async function TextDecoration(context: vscode.ExtensionContext) {
-    init()
-    events(context);
+    init();
+
+    context.subscriptions.push(
+        vscode.window.onDidChangeVisibleTextEditors((editors) => init()),
+        vscode.workspace.onDidSaveTextDocument((document) => maskCurrentEditor()),
+        vscode.window.onDidChangeTextEditorSelection((event) => maskCurrentEditor()),
+    );
 }
 
 function init() {
     vscode.window.visibleTextEditors.map((editor) => setMasks(editor));
 
     if (userMasks.length) {
-        util.MASK_EXTENSION_PROVIDER.addAdditionalMasks(userMasks)
+        util.MASK_EXTENSION_PROVIDER.addAdditionalMasks(userMasks);
     }
 }
 
 function maskCurrentEditor() {
-    setMasks(vscode.window.activeTextEditor)
+    setMasks(vscode.window.activeTextEditor);
 
     if (userMasks.length) {
-        util.MASK_EXTENSION_PROVIDER.addAdditionalMasks(userMasks)
+        util.MASK_EXTENSION_PROVIDER.addAdditionalMasks(userMasks);
     }
-}
-
-function events(context: vscode.ExtensionContext) {
-    vscode.window.onDidChangeVisibleTextEditors((editors) => {
-        init()
-    }, null, context.subscriptions);
-
-    vscode.workspace.onDidSaveTextDocument((document) => {
-        maskCurrentEditor()
-    }, null, context.subscriptions);
-
-    vscode.window.onDidChangeTextEditorSelection((event) => {
-        maskCurrentEditor()
-    }, null, context.subscriptions);
 }
 
 function setMasks(editor) {
     userMasks = [
         {
-            "language": util.FILE_TYPE,
-            "patterns": [
-                ...linkDecor(editor)
-            ]
-        }
-    ]
+            language : util.FILE_TYPE,
+            patterns : [
+                ...linkDecor(editor),
+            ],
+        },
+    ];
 }
 
 function linkDecor(editor) {
-    let patterns: any = [];
+    const patterns: any = [];
 
     if (editor) {
-        const { document } = editor
+        const { document } = editor;
         const text = document.getText();
 
         patterns.push(
             ...externalLinkRegex(text),
             ...complexLinkRegex(text),
-            ...headerLinkRegex(text)
-        )
+            ...headerLinkRegex(text),
+        );
     }
 
-    return patterns
+    return patterns;
 }
 
 // []()
 function externalLinkRegex(text) {
     const regEx = /(?<!\[\!)\[(?![\! ])(.*?)\]\((?!#)(.*?)\)/g;
-    let patterns: any = []
+    const patterns: any = [];
     let match;
 
     while ((match = regEx.exec(text))) {
-        let title = match[1]
-        let link = match[2]
+        const title = match[1];
+        const link = match[2];
 
         patterns.push(
             {
-                "pattern": escapeStringRegexp(`[${title}](${link})`),
-                "replace": ` @${title} `,
-                "hover": getHoverText(title, link),
-                "style": util.config.linkStyles
+                pattern : escapeStringRegexp(`[${title}](${link})`),
+                replace : ` @${title} `,
+                hover   : getHoverText(title, link),
+                style   : util.config.linkStyles,
             },
-        )
+        );
     }
 
-    return patterns
+    return patterns;
 }
 
 // [![]()]()
 function complexLinkRegex(text) {
-    let regEx = /\[!\[(.*?)\]\((.*?)\)(?=(\s|$))/g;
-    let patterns: any = []
+    const regEx = /\[!\[(.*?)\]\((.*?)\)(?=(\s|$))/g;
+    const patterns: any = [];
     let match;
 
     while ((match = regEx.exec(text))) {
-        let title = match[1]
-        let link = match[2]
+        const title = match[1];
+        const link = match[2];
 
         patterns.push(
             {
-                "pattern": escapeStringRegexp(`[![${title}](${link})`),
-                "replace": ` !${title} `,
-                "style": util.config.linkStyles
+                pattern : escapeStringRegexp(`[![${title}](${link})`),
+                replace : ` !${title} `,
+                style   : util.config.linkStyles,
             },
-        )
+        );
     }
 
-    return patterns
+    return patterns;
 }
 
 // [](#)
 function headerLinkRegex(text) {
     const regEx = /(?<!\[\!)\[(?![\! ])(.*?)\]\((#.*?)\)/g;
-    let patterns: any = []
+    const patterns: any = [];
     let match;
 
     while ((match = regEx.exec(text))) {
-        let title = match[1]
-        let link = match[2]
+        const title = match[1];
+        const link = match[2];
 
         patterns.push(
             {
-                "pattern": escapeStringRegexp(`[${title}](${link})`),
-                "replace": ` #${title} `,
-                "style": util.config.linkStyles
+                pattern : escapeStringRegexp(`[${title}](${link})`),
+                replace : ` #${title} `,
+                style   : util.config.linkStyles,
             },
-        )
+        );
     }
 
-    return patterns
+    return patterns;
 }
 
 function getHoverText(title, link) {
-    let md = new vscode.MarkdownString(`[${title}](${link})`)
-    md.isTrusted = true
+    const md = new vscode.MarkdownString(`[${title}](${link})`);
+    md.isTrusted = true;
 
-    return md
+    return md;
 }

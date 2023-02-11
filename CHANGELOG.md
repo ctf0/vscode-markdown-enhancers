@@ -30,3 +30,7 @@
 ## 0.0.7
 
 - correct link regex
+
+## 0.0.9
+
+- support code lens for code blocks without language
