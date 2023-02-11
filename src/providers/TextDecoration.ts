@@ -93,7 +93,7 @@ function externalLinkRegex(text) {
 // [![]()]()
 function complexLinkRegex(text) {
     let regEx = /\[!\[(.*?)\]\((.*?)\)(?=(\s|$))/g;
-    let patterns = []
+    let patterns: any = []
     let match;
 
     while ((match = regEx.exec(text))) {
@@ -114,8 +114,8 @@ function complexLinkRegex(text) {
 
 // [](#)
 function headerLinkRegex(text) {
-    const regEx = /(?<!\[\!)\[(?!\!)(.*?)\]\((#.*?)\)/g;
-    let patterns = []
+    const regEx = /(?<!\[\!)\[(?![\! ])(.*?)\]\((#.*?)\)/g;
+    let patterns: any = []
     let match;
 
     while ((match = regEx.exec(text))) {
