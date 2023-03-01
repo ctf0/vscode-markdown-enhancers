@@ -34,3 +34,7 @@
 ## 0.0.9
 
 - support code lens for code blocks without language
+
+## 0.1.0
+
+- undo 009 changes
