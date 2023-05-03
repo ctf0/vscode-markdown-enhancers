@@ -38,3 +38,7 @@
 ## 0.1.0
 
 - undo 009 changes
+
+## 0.1.1
+
+- add extra regex for img links

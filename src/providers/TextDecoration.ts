@@ -52,6 +52,7 @@ function linkDecor(editor) {
             ...externalLinkRegex(text),
             ...complexLinkRegex(text),
             ...headerLinkRegex(text),
+            ...imgLinkRegex(text),
         );
     }
 
@@ -60,7 +61,7 @@ function linkDecor(editor) {
 
 // []()
 function externalLinkRegex(text) {
-    const regEx = /(?<!\[\!)\[(?![\! ])(.*?)\]\((?!#)(.*?)\)/g;
+    const regEx = /(?<!(\[\!|\!))\[(?![\! ])(.*?)\]\((?!#)(.*?)\)/g;
     const patterns: any = [];
     let match;
 
@@ -117,6 +118,28 @@ function headerLinkRegex(text) {
             {
                 pattern : escapeStringRegexp(`[${title}](${link})`),
                 replace : ` #${title} `,
+                style   : util.config.linkStyles,
+            },
+        );
+    }
+
+    return patterns;
+}
+
+// ![]()
+function imgLinkRegex(text) {
+    const regEx = /(?<!\[)\!\[(.*?)\]\((.*?)\)(?=(\s|$))/g;
+    const patterns: any = [];
+    let match;
+
+    while ((match = regEx.exec(text))) {
+        const title = match[1];
+        const link = match[2];
+
+        patterns.push(
+            {
+                pattern : escapeStringRegexp(`![${title}](${link})`),
+                replace : ` !${title} `,
                 style   : util.config.linkStyles,
             },
         );
