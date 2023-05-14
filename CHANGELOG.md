@@ -42,3 +42,7 @@
 ## 0.1.1
 
 - add extra regex for img links
+
+## 0.1.2
+
+- fixes & add hover to all link masks

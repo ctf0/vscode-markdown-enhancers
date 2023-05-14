@@ -2,7 +2,7 @@
     "name": "markdown-enhancers",
     "displayName": "Markdown Enhancers",
     "description": "some enhancers to make working with Markdown a bit easier",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "publisher": "ctf0",
     "repository": "https://github.com/ctf0/vscode-markdown-enhancers",
     "engines": {
@@ -57,6 +57,7 @@
     },
     "dependencies": {
         "escape-string-regexp": "^5.0.0",
+        "p-debounce": "^4.0.0",
         "title-case": "^3.0.3"
     },
     "extensionDependencies": [
