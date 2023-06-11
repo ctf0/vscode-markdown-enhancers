@@ -7,9 +7,9 @@ let userMasks: any = [];
 
 export default async function TextDecoration(context: vscode.ExtensionContext) {
     context.subscriptions.push(
-        vscode.window.onDidChangeVisibleTextEditors((editors) => init()),
-        vscode.workspace.onDidSaveTextDocument(async (document) => await maskCurrentEditor()),
-        vscode.window.onDidChangeTextEditorSelection(pDebounce(async (event) => await maskCurrentEditor(), 200)),
+        vscode.window.onDidChangeVisibleTextEditors(() => init()),
+        vscode.workspace.onDidSaveTextDocument(async () => await maskCurrentEditor()),
+        vscode.window.onDidChangeTextEditorSelection(pDebounce(async () => await maskCurrentEditor(), 200)),
     );
 }
 
@@ -66,19 +66,20 @@ async function linkDecor(editor) {
 
 // []()
 function externalLinkRegex(text) {
-    return new Promise((resolve, reject) => {
-        const regEx = /(?<!(\[\!|\!))\[(?![\! ])(.*?)\]\((?!#)(.*?)\)/g;
+    return new Promise((resolve) => {
+        const regEx = /(?<!(\[!|!))\[(?![! ])(.*?)\]\((?!#)(.*?)\)/g;
         const patterns: any = [];
         let match;
 
         while ((match = regEx.exec(text))) {
             const title = match[2];
             const link = match[3];
+            const linkTitle = replaceSimilarStart(title, '@');
 
             patterns.push(
                 {
                     pattern : escapeStringRegexp(match[0]),
-                    replace : ` @${title} `,
+                    replace : ` @${linkTitle} `,
                     hover   : getHoverText(title, link),
                     style   : util.config.linkStyles,
                 },
@@ -91,7 +92,7 @@ function externalLinkRegex(text) {
 
 // [![]()]()
 function complexLinkRegex(text) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const regEx = /\[!\[(.*?)\]\((.*?)\)\]\s?\((.*?)\)/g;
         const patterns: any = [];
         let match;
@@ -99,7 +100,7 @@ function complexLinkRegex(text) {
         while ((match = regEx.exec(text))) {
             const title = match[1];
             const link = match[2];
-            const TitleOrLast = title || match[3];
+            const TitleOrLast = replaceSimilarStart(title || match[3], '!');
 
             patterns.push(
                 {
@@ -117,15 +118,15 @@ function complexLinkRegex(text) {
 
 // [](#)
 function headerLinkRegex(text) {
-    return new Promise((resolve, reject) => {
-        const regEx = /(?<!\[\!)\[(?![\! ])(.*?)\]\((#.*?)\)/g;
+    return new Promise((resolve) => {
+        const regEx = /(?<!\[!)\[(?![! ])(.*?)\]\((#.*?)\)/g;
         const patterns: any = [];
         let match;
 
         while ((match = regEx.exec(text))) {
             const title = match[1];
             const link = match[2];
-            const TitleOrLink = title || link;
+            const TitleOrLink = replaceSimilarStart(title || link, '#');
 
             patterns.push(
                 {
@@ -143,15 +144,15 @@ function headerLinkRegex(text) {
 
 // ![]()
 function imgLinkRegex(text) {
-    return new Promise((resolve, reject) => {
-        const regEx = /(?<!\[)\!\[(.*?)\]\((.*?)\)/g;
+    return new Promise((resolve) => {
+        const regEx = /(?<!\[)!\[(.*?)\]\((.*?)\)/g;
         const patterns: any = [];
         let match;
 
         while ((match = regEx.exec(text))) {
             const title = match[1];
             const link = match[2];
-            const TitleOrLink = title || link;
+            const TitleOrLink = replaceSimilarStart(title || link, '!');
 
             patterns.push(
                 {
@@ -165,6 +166,10 @@ function imgLinkRegex(text) {
 
         resolve(patterns);
     });
+}
+
+function replaceSimilarStart(str, char) {
+    return str.replace(new RegExp(`^${char}`), '');
 }
 
 function getHoverText(title, link) {
