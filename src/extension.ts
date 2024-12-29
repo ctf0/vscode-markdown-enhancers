@@ -1,9 +1,11 @@
+import pDebounce from 'p-debounce';
 import * as vscode from 'vscode';
 import HoverProvider from './providers/CodeHoverProvider';
 import LensProvider from './providers/CodeLensProvider';
 import TextDecoration from './providers/TextDecoration';
 import * as util from './util';
 
+let providers: any = [];
 export async function activate(context: vscode.ExtensionContext) {
     await util.maskExtensionProviderInit();
     util.setConfig();
@@ -15,9 +17,10 @@ export async function activate(context: vscode.ExtensionContext) {
                 useDecoration(context);
             }
         }),
-
-        vscode.languages.registerHoverProvider([util.FILE_TYPE], new HoverProvider()),
-        vscode.languages.registerCodeLensProvider([util.FILE_TYPE], new LensProvider()),
+        vscode.window.onDidChangeActiveTextEditor(async () => {
+            await clearAll();
+            initProviders();
+        }),
 
         /* Commands ----------------------------------------------------------------- */
         vscode.commands.registerCommand(util.btns.run.cmnd, ({ text }) => {
@@ -32,6 +35,7 @@ export async function activate(context: vscode.ExtensionContext) {
         }),
     );
 
+    initProviders();
     useDecoration(context);
 }
 
@@ -43,4 +47,21 @@ function useDecoration(context: vscode.ExtensionContext) {
     }
 }
 
-export function deactivate() { }
+const initProviders = pDebounce(() => {
+    providers.push(
+        vscode.languages.registerHoverProvider([util.FILE_TYPE], new HoverProvider()),
+        vscode.languages.registerCodeLensProvider([util.FILE_TYPE], new LensProvider()),
+    )
+}, 250);
+
+function clearAll() {
+    return new Promise((res) => {
+        providers.map((e) => e.dispose());
+        providers = [];
+
+        setTimeout(() => res(true), 500);
+    });
+}
+export function deactivate() {
+    clearAll();
+}

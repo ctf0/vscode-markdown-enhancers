@@ -4,14 +4,14 @@ import {
 } from 'vscode';
 import * as util from '../util';
 
+const re = new RegExp(/(?<=([ \t]+)?`{3}\S+\s)(.|\s)+?(?=\s([ \t]+)?`{3})/, 'g');
+
 export default class LensProvider implements CodeLensProvider {
-    async provideCodeLenses(document: TextDocument): Promise<CodeLens[]> {
+    provideCodeLenses(document: TextDocument) {
         const btns = util.btns;
-        const links = [];
+        const links: any = [];
 
         const text = document.getText();
-        const re = new RegExp(/(?<=([ \t]+)?`{3}\S+\s)(.|\s)*?(?=\s([ \t]+)?`{3})/, 'g');
-
         const matches = text.matchAll(re);
 
         for (const match of matches) {
@@ -22,15 +22,18 @@ export default class LensProvider implements CodeLensProvider {
 
             links.push(
                 new CodeLens(range, {
-                    command   : btns.run.cmnd,
-                    title     : btns.run.icon,
-                    arguments : args,
-                }),
+                    command: btns.run.cmnd,
+                    title: btns.run.icon,
+                    arguments: args,
+                })
+            );
+
+            links.push(
                 new CodeLens(range, {
                     command   : btns.copy.cmnd,
                     title     : btns.copy.icon,
                     arguments : args,
-                }),
+                })
             );
         }
 

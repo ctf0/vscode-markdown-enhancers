@@ -46,3 +46,7 @@
 ## 0.1.2
 
 - fixes & add hover to all link masks
+
+## 0.1.5
+
+- fix the code lens init issue

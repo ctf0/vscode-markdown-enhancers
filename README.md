@@ -1,7 +1,7 @@
 # Markdown Enhancers
 
 - support code **hover** & **lens** of `Run | Copy` for code blocks
-- support indented code blocks which [markdown-script](https://marketplace.visualstudio.com/items?itemName=axetroy.vscode-markdown-script) doesnt support
+- support indented code blocks
 - support hovering nested lines in code blocks (line must start with `$`)
 
 ## Notes
