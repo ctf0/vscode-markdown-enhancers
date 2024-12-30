@@ -4,7 +4,7 @@ import {
 } from 'vscode';
 import * as util from '../util';
 
-const re = new RegExp(/(?<=([ \t]+)?`{3}\S+\s)(.|\s)+?(?=\s([ \t]+)?`{3})/, 'g');
+const re = new RegExp(/(?<=([ \t]+)?`{3}[^`]\S+\s)(.|\s)+(?=\s([ \t]+)?`{3})/, 'g');
 
 export default class LensProvider implements CodeLensProvider {
     provideCodeLenses(document: TextDocument) {
